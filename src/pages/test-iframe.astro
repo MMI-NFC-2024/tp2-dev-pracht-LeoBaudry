@@ -1,29 +1,31 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout2 from "../layouts/LayoutIframe.astro";
 ---
 
-<Layout>
-
+<Layout2>
 <div class="p-4">
   <h1 class="text-2xl font-bold mb-4">TP2 - Iframe des espèces</h1>
+    <div>
+    <!-- Iframe  -->
+      <iframe 
+        name="speciesFrame" 
+        src="/species/Adelie" 
+        class="w-full border rounded-lg" 
+        id="speciesFrame"
+        style="width: 100%; border: none;"
+      >
+      </iframe>
 
-  <!-- Menu  -->
-  <nav class="flex gap-4 mb-4">
-    <a href="/species/Adelie" target="speciesFrame" class="text-green-400 hover:underline">Adelie</a>
-    <a href="/species/Gentoo" target="speciesFrame" class="text-green-400 hover:underline">Gentoo</a>
-    <a href="/species/Chinstrap" target="speciesFrame" class="text-green-400 hover:underline">Chinstrap</a>
-  </nav>
-
-  <!-- Iframe  -->
-  <iframe 
-    name="speciesFrame" 
-    src="/species/Adelie" 
-    class="w-full border rounded-lg" 
-    id="speciesFrame"
-    style="width: 100%; border: none;"
-  ></iframe>
+    <!-- Menu  -->
+      <nav class="flex gap-4 mb-4 ml-6">
+        <p class="text-2xl">Voir :</p>
+        <a href="/species/Adelie" target="speciesFrame" class="text-blue-600 hover:underline font-semibold text-2xl">Adelie</a>
+        <a href="/species/Gentoo" target="speciesFrame" class="text-blue-600 hover:underline font-semibold text-2xl">Gentoo</a>
+        <a href="/species/Chinstrap" target="speciesFrame" class="text-blue-600 hover:underline font-semibold text-2xl">Chinstrap</a>
+      </nav>
+    </div>
 </div>
-</Layout>
+</Layout2>
 
 
 <script>
