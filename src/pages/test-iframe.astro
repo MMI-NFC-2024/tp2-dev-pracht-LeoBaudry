@@ -4,36 +4,118 @@ import Layout2 from "../layouts/LayoutIframe.astro";
 
 <Layout2>
 <div class="p-4">
-  <h1 class="text-2xl font-bold mb-4">TP2 - Iframe des espèces</h1>
-    <div>
-    <!-- Iframe  -->
-      <iframe 
-        name="speciesFrame" 
-        src="/species/Adelie" 
-        class="w-full border rounded-lg" 
-        id="speciesFrame"
-        style="width: 100%; border: none;"
-      >
-      </iframe>
+  <div>
+    <!-- Iframe -->
+    <iframe 
+      name="speciesFrame" 
+      src="/species/Adelie" 
+      class="w-full border rounded-lg" 
+      id="speciesFrame"
+      style="width: 100%; border: none;"
+    >
+    </iframe>
+      <!-- Menu  -->
+  <nav class="flex justify-center mb-6">
+    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-lg border border-white/30">
+      <div class="flex items-center gap-2">
+        
+        <!-- Boutons d'espèces -->
+        <a href="/species/Adelie" 
+           target="speciesFrame" 
+           class="species-nav-btn bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+          <span class="text-xl">🐧</span>
+          <span class="font-semibold">Adelie</span>
+          <div class="nav-shine"></div>
+        </a>
 
-    <!-- Menu  -->
-      <nav class="flex gap-4 mb-4 ml-6">
-        <p class="text-2xl">Voir :</p>
-        <a href="/species/Adelie" target="speciesFrame" class="text-blue-600 hover:underline font-semibold text-2xl">Adelie</a>
-        <a href="/species/Gentoo" target="speciesFrame" class="text-blue-600 hover:underline font-semibold text-2xl">Gentoo</a>
-        <a href="/species/Chinstrap" target="speciesFrame" class="text-blue-600 hover:underline font-semibold text-2xl">Chinstrap</a>
-      </nav>
+        <a href="/species/Gentoo" 
+           target="speciesFrame" 
+           class="species-nav-btn bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700">
+          <span class="text-xl">🐧</span>
+          <span class="font-semibold">Gentoo</span>
+          <div class="nav-shine"></div>
+        </a>
+
+        <a href="/species/Chinstrap" 
+           target="speciesFrame" 
+           class="species-nav-btn bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+          <span class="text-xl">🐧</span>
+          <span class="font-semibold">Chinstrap</span>
+          <div class="nav-shine"></div>
+        </a>
+      </div>
     </div>
+  </nav>
+  </div>
 </div>
 </Layout2>
 
+<style>
+  /* Style des boutons de navigation */
+  .species-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .species-nav-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Effet brillant au survol */
+  .nav-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .species-nav-btn:hover .nav-shine {
+    left: 100%;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav > div > div {
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .species-nav-btn {
+      justify-content: center;
+      padding: 16px;
+    }
+
+    /* Label sur mobile */
+    nav > div > div > div:first-child {
+      order: -1;
+      justify-content: center;
+    }
+  }
+</style>
 
 <script>
-  const iframe = document.getElementById("speciesFrame");
+  const iframe = document.getElementById("speciesFrame") as HTMLIFrameElement;
 
   function resizeIframe() {
     try {
-      iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+      if (iframe?.contentWindow?.document.body) {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+      }
     } catch (e) {
       console.warn("Impossible de redimensionner l'iframe :", e);
     }

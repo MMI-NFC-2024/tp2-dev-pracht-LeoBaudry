@@ -6,27 +6,172 @@ import penguins from "../assets/penguins.json";
 const { species } = Astro.props;
 const data = penguins.filter((p) => p.species === species);
 
+// Configuration des couleurs par espèce
+const speciesConfig = {
+  "Adelie": {
+    color: "#f97316", // orange-500
+    bgColor: "#fff7ed", // orange-50
+    borderColor: "#fed7aa", // orange-200
+    lightColor: "#fb923c" // orange-400
+  },
+  "Gentoo": {
+    color: "#14b8a6", // teal-500
+    bgColor: "#f0fdfa", // teal-50
+    borderColor: "#99f6e4", // teal-200
+    lightColor: "#2dd4bf" // teal-400
+  },
+  "Chinstrap": {
+    color: "#a855f7", // purple-500
+    bgColor: "#faf5ff", // purple-50
+    borderColor: "#e9d5ff", // purple-200
+    lightColor: "#c084fc" // purple-400
+  }
+};
+
+const config = speciesConfig[species] || speciesConfig["Adelie"];
+
 const options = {
+  marginLeft: 60,
+  marginBottom: 60,
+  width: 600,
+  height: 400,
+  style: {
+    background: "transparent",
+    fontSize: "14px",
+    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+  },
   marks: [
+    // Grille de fond stylisée
+    Plot.gridX({stroke: "#e2e8f0", strokeOpacity: 0.5}),
+    Plot.gridY({stroke: "#e2e8f0", strokeOpacity: 0.5}),
+    
+    // Points avec style amélioré
     Plot.dot(data, {
       x: "culmen_length_mm",
       y: "culmen_depth_mm",
-      fill: "species",
-      tip: true
+      fill: config.color,
+      stroke: "#ffffff",
+      strokeWidth: 2,
+      r: 6,
+      fillOpacity: 0.8,
+      tip: {
+        format: {
+          x: (d) => `Longueur: ${d.toFixed(1)}mm`,
+          y: (d) => `Profondeur: ${d.toFixed(1)}mm`,
+          fill: () => species
+        }
+      }
     })
-  ]
+  ],
+  x: {
+    label: "Longueur du bec (mm)",
+    labelOffset: 45,
+    grid: true,
+    labelArrow: "none"
+  },
+  y: {
+    label: "Profondeur du bec (mm)",
+    labelOffset: 50,
+    grid: true,
+    labelArrow: "none"
+  }
 };
 
 const isIndex = Astro.url.pathname === '/';
+
+// Stats pour affichage
+const stats = {
+  count: data.length,
+  avgLength: (data.reduce((sum, p) => sum + (p.culmen_length_mm ?? 0), 0) / data.length).toFixed(1),
+  avgDepth: (data.reduce((sum, p) => sum + (p.culmen_depth_mm ?? 0), 0) / data.length).toFixed(1)
+};
 ---
 
-<div class="p-4">
+<div class="graphic-species-container">
   {!isIndex && (
-    <nav class="mb-4">
-      <a href="/" class="text-blue-600 hover:underline">← Retour à l’accueil</a>
-    </nav>
+    <div class="mb-4">
+      <a href="/" 
+         class=" pt-4 pl-10 inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-300 group">
+        <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform duration-300" 
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Retour à l'accueil
+      </a>
+    </div>
   )}
 
-  <h2 class="text-xl font-bold mb-2">{species}</h2>
-  <PlotFigure options={options} />
+  <!-- En-tête avec stats -->
+  <div class="mb-6 p-6 rounded-xl border-2 transition-all duration-300 hover:shadow-lg"
+       style={`background: ${config.bgColor}; border-color: ${config.borderColor}`}>
+    
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
+             style={`background: linear-gradient(135deg, ${config.color}, ${config.lightColor})`}>
+          {species[0]}
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold mb-1" style={`color: ${config.color}`}>
+            Manchots {species}
+          </h2>
+          <p class="text-gray-600">Analyse morphologique du bec</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="grid grid-cols-3 gap-4">
+      <div class="text-center p-3 bg-white/60 rounded-lg backdrop-blur-sm">
+        <div class="text-2xl font-bold" style={`color: ${config.color}`}>{stats.count}</div>
+        <div class="text-sm text-gray-600">Spécimens</div>
+      </div>
+      <div class="text-center p-3 bg-white/60 rounded-lg backdrop-blur-sm">
+        <div class="text-2xl font-bold" style={`color: ${config.color}`}>{stats.avgLength}mm</div>
+        <div class="text-sm text-gray-600">Longueur moy.</div>
+      </div>
+      <div class="text-center p-3 bg-white/60 rounded-lg backdrop-blur-sm">
+        <div class="text-2xl font-bold" style={`color: ${config.color}`}>{stats.avgDepth}mm</div>
+        <div class="text-sm text-gray-600">Profondeur moy.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphique -->
+  <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-800">
+        Distribution des mesures du bec
+      </h3>
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded-full" style={`background: ${config.color}`}></div>
+        <span class="text-sm text-gray-600">{species}</span>
+      </div>
+    </div>
+    
+    <div class="graphic-wrapper">
+      <PlotFigure options={options} />
+    </div>
+    
+    <!-- Description -->
+    <div class="mt-4 p-4 rounded-lg" style={`background: ${config.bgColor}`}>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        Ce graphique montre la relation entre la longueur et la profondeur du bec pour {stats.count} manchots {species}.
+        Chaque point représente un individu, avec des mesures moyennes de {stats.avgLength}mm de longueur et {stats.avgDepth}mm de profondeur.
+      </p>
+    </div>
+  </div>
 </div>
+
+<style>
+  .graphic-species-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .graphic-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f
