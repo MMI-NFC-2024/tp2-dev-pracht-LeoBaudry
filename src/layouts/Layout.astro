@@ -12,6 +12,12 @@ import "../styles/global.css";
     <title>Astro Basics</title>
   </head>
   <body>
+    <nav class="flex gap-4 p-4 bg-gray-100">
+      <a href="/species/Adelie" class="text-blue-600 hover:underline">Adelie</a>
+      <a href="/species/Gentoo" class="text-blue-600 hover:underline">Gentoo</a>
+      <a href="/species/Chinstrap" class="text-blue-600 hover:underline">Chinstrap</a>
+    </nav>
+
     <slot />
   </body>
 </html>
