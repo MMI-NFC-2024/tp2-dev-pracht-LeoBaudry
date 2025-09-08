@@ -41,11 +41,10 @@ const options = {
     fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
   },
   marks: [
-    // Grille de fond stylisée
+
     Plot.gridX({stroke: "#e2e8f0", strokeOpacity: 0.5}),
     Plot.gridY({stroke: "#e2e8f0", strokeOpacity: 0.5}),
-    
-    // Points avec style amélioré
+  
     Plot.dot(data, {
       x: "culmen_length_mm",
       y: "culmen_depth_mm",
@@ -79,12 +78,6 @@ const options = {
 
 const isIndex = Astro.url.pathname === '/';
 
-// Stats pour affichage
-const stats = {
-  count: data.length,
-  avgLength: (data.reduce((sum, p) => sum + (p.culmen_length_mm ?? 0), 0) / data.length).toFixed(1),
-  avgDepth: (data.reduce((sum, p) => sum + (p.culmen_depth_mm ?? 0), 0) / data.length).toFixed(1)
-};
 ---
 
 <div class="graphic-species-container">
@@ -101,41 +94,6 @@ const stats = {
     </div>
   )}
 
-  <!-- En-tête avec stats -->
-  <div class="mb-6 p-6 rounded-xl border-2 transition-all duration-300 hover:shadow-lg"
-       style={`background: ${config.bgColor}; border-color: ${config.borderColor}`}>
-    
-    <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
-             style={`background: linear-gradient(135deg, ${config.color}, ${config.lightColor})`}>
-          {species[0]}
-        </div>
-        <div>
-          <h2 class="text-2xl font-bold mb-1" style={`color: ${config.color}`}>
-            Manchots {species}
-          </h2>
-          <p class="text-gray-600">Analyse morphologique du bec</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Statistiques -->
-    <div class="grid grid-cols-3 gap-4">
-      <div class="text-center p-3 bg-white/60 rounded-lg backdrop-blur-sm">
-        <div class="text-2xl font-bold" style={`color: ${config.color}`}>{stats.count}</div>
-        <div class="text-sm text-gray-600">Spécimens</div>
-      </div>
-      <div class="text-center p-3 bg-white/60 rounded-lg backdrop-blur-sm">
-        <div class="text-2xl font-bold" style={`color: ${config.color}`}>{stats.avgLength}mm</div>
-        <div class="text-sm text-gray-600">Longueur moy.</div>
-      </div>
-      <div class="text-center p-3 bg-white/60 rounded-lg backdrop-blur-sm">
-        <div class="text-2xl font-bold" style={`color: ${config.color}`}>{stats.avgDepth}mm</div>
-        <div class="text-sm text-gray-600">Profondeur moy.</div>
-      </div>
-    </div>
-  </div>
 
   <!-- Graphique -->
   <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
@@ -149,29 +107,8 @@ const stats = {
       </div>
     </div>
     
-    <div class="graphic-wrapper">
+    <div>
       <PlotFigure options={options} />
-    </div>
-    
-    <!-- Description -->
-    <div class="mt-4 p-4 rounded-lg" style={`background: ${config.bgColor}`}>
-      <p class="text-sm text-gray-700 leading-relaxed">
-        Ce graphique montre la relation entre la longueur et la profondeur du bec pour {stats.count} manchots {species}.
-        Chaque point représente un individu, avec des mesures moyennes de {stats.avgLength}mm de longueur et {stats.avgDepth}mm de profondeur.
-      </p>
     </div>
   </div>
 </div>
-
-<style>
-  .graphic-species-container {
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .graphic-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 400px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f
