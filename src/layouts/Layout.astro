@@ -12,12 +12,15 @@ import "../styles/global.css";
     <title>Astro Basics</title>
   </head>
   <body>
-    <nav class="flex gap-4 p-4 bg-gray-100">
-      <p class="text-lg pr-8">Menu</p>
-      <a href="/species/Adelie" class="text-green-600 hover:underline text-lg">Adelie</a>
-      <a href="/species/Gentoo" class="text-green-600 hover:underline text-lg">Gentoo</a>
-      <a href="/species/Chinstrap" class="text-green-600 hover:underline text-lg">Chinstrap</a>
-    </nav>
+<nav class="flex gap-4 p-4 bg-gray-50">
+  <p class="pr-8 text-xl font-bold">Menu</p>
+  <a href="/species/Adelie" class="text-green-600 hover:underline text-lg" target="_top">Adelie</a>
+  <a href="/species/Gentoo" class="text-green-600 hover:underline text-lg" target="_top">Gentoo</a>
+  <a href="/species/Chinstrap" class="text-green-600 hover:underline text-lg" target="_top">Chinstrap</a>
+
+  <a href="/test-iframe" class="text-purple-600 hover:underline text-lg" target="_top">Page Iframe</a>
+  <a href="/all-species" class="text-purple-600 hover:underline text-lg" target="_top">Page avec ancres</a>
+</nav>
 
     <slot />
   </body>
