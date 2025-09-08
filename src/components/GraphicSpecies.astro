@@ -16,9 +16,17 @@ const options = {
     })
   ]
 };
+
+const isIndex = Astro.url.pathname === '/';
 ---
 
 <div class="p-4">
+  {!isIndex && (
+    <nav class="mb-4">
+      <a href="/" class="text-blue-600 hover:underline">← Retour à l’accueil</a>
+    </nav>
+  )}
+
   <h2 class="text-xl font-bold mb-2">{species}</h2>
   <PlotFigure options={options} />
 </div>
